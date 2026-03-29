@@ -7,20 +7,21 @@ from rest_framework_simplejwt.views import (
 )
 
 from .views import (
-    RegisterView, UserViewSet, TagViewSet,
-    ProjectViewSet, TaskViewSet, SubTaskViewSet,
-    CommentViewSet, AttachmentViewSet, DashboardView
+    ActivityLogViewSet, ChatConversationViewSet, ChatMessageView, RegisterView, WorkspaceViewSet, WorkspaceInvitationViewSet,
+    UserViewSet, TagViewSet, TaskViewSet, CommentViewSet, AttachmentViewSet, DashboardView
 )
 
 # Configuration du router DRF
 router = DefaultRouter()
+router.register(r'workspaces', WorkspaceViewSet, basename='workspace')
+router.register(r'invitations', WorkspaceInvitationViewSet, basename='invitation')
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'tags', TagViewSet, basename='tag')
-router.register(r'projects', ProjectViewSet, basename='project')
 router.register(r'tasks', TaskViewSet, basename='task')
-router.register(r'subtasks', SubTaskViewSet, basename='subtask')
 router.register(r'comments', CommentViewSet, basename='comment')
 router.register(r'attachments', AttachmentViewSet, basename='attachment')
+router.register(r'activities', ActivityLogViewSet, basename='activity')
+router.register(r'chat/conversations', ChatConversationViewSet, basename='chat-conversation')
 
 urlpatterns = [
     # Routes du router
@@ -34,4 +35,7 @@ urlpatterns = [
     
     # Dashboard
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
+
+    # Chat
+    path('chat/send/', ChatMessageView.as_view(), name='chat-send'),
 ]

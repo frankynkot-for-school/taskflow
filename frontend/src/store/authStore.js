@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { authService } from '../services/api';
+import { useWorkspaceStore } from './workspaceStore';
+import { useChatStore } from './chatStore';
 
 export const useAuthStore = create((set, get) => ({
   user: null,
@@ -39,11 +41,15 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  // Inscription
+  // Inscription et connexion automatique
   register: async (userData) => {
     try {
       set({ error: null });
       await authService.register(userData);
+      // Connecter automatiquement après inscription
+      await authService.login(userData.username, userData.password);
+      const user = await authService.getCurrentUser();
+      set({ user, isAuthenticated: true });
       return { success: true };
     } catch (error) {
       const message = error.response?.data || 'Erreur lors de l\'inscription';
@@ -55,6 +61,8 @@ export const useAuthStore = create((set, get) => ({
   // Déconnexion
   logout: () => {
     authService.logout();
+    useWorkspaceStore.getState().reset();
+    useChatStore.getState().reset();
     set({ user: null, isAuthenticated: false });
   },
 
