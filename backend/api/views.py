@@ -899,6 +899,7 @@ class ChatMessageView(APIView):
                     'conversation_id': conversation.id,
                     'message': ChatMessageSerializer(result['message']).data,
                     'tokens_used': result.get('tokens_used'),
+                    'user_message_id': result['message'].id,
                 })
             else:
                 return Response(
@@ -909,5 +910,13 @@ class ChatMessageView(APIView):
             return Response(
                 {'error': str(e)},
                 status=status.HTTP_503_SERVICE_UNAVAILABLE
+            )
+        except Exception as e:
+            import logging
+            logger = logging.getLogger('django')
+            logger.error(f"Chat error: {str(e)}", exc_info=True)
+            return Response(
+                {'error': 'Une erreur est survenue. Veuillez reessayer.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 

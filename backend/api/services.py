@@ -139,9 +139,12 @@ class MistralService:
     def __init__(self):
         api_key = config('MISTRAL_API_KEY', default='')
         if not api_key:
-            raise ValueError("MISTRAL_API_KEY non configure")
-        from mistralai import Mistral
-        self.client = Mistral(api_key=api_key)
+            raise ValueError("MISTRAL_API_KEY n'est pas configurée. Veuillez définer la variable d'environnement MISTRAL_API_KEY.")
+        try:
+            from mistralai.client import Mistral
+            self.client = Mistral(api_key=api_key)
+        except ImportError:
+            raise ValueError("Le paquet 'mistralai' n'est pas installé. Installez-le avec: pip install mistralai")
 
     @staticmethod
     def build_system_prompt(user, workspace, tasks):

@@ -14,11 +14,8 @@ const ChatWidget = memo(() => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={toggleChat}
-        className={`fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg flex items-center justify-center z-40 transition-colors ${
-          isOpen
-            ? 'bg-taskflow-sidebar text-white'
-            : 'bg-taskflow-primary text-white hover:bg-taskflow-primaryHover'
-        }`}
+        className={`chat-button ${isOpen ? 'open' : ''}`}
+        title="Ouvrir l'assistant IA"
       >
         <FiMessageSquare className="text-xl" />
         {isSending && (
